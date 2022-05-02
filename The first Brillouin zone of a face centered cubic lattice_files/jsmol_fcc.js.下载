@@ -1,0 +1,438 @@
+/* Generated from Java with JSweet 2.2.0-SNAPSHOT - http://www.jsweet.org */
+var calc;
+(function (calc) {
+    class Vektor {
+        constructor(d, d1, d2) {
+            if (this.x === undefined)
+                this.x = 0;
+            if (this.y === undefined)
+                this.y = 0;
+            if (this.z === undefined)
+                this.z = 0;
+            this.x = d;
+            this.y = d1;
+            this.z = d2;
+        }
+    }
+    calc.Vektor = Vektor;
+    Vektor["__class"] = "calc.Vektor";
+})(calc || (calc = {}));
+var Cfcc;
+
+function addSymmetricEdge(a, b, text, diameter, nameline, namepnt) {
+    let command = "";
+    command = command + "draw " + nameline + " line {" + String(a.x) + " " + String(a.y) + " " + String(a.z) + "} {" + String(b.x) + " " + String(b.y) + " " + String(b.z) + "} diameter " + diameter + "; ";
+    command = command + "set echo " + namepnt + " {" + String(a.x+(b.x-a.x)/2) + " " + String(a.y+(b.y-a.y)/2) + " " + String(a.z+(b.z-a.z)/2) + "}; echo \"" + text + "\"; ";
+    return command;
+}
+
+function addEdge(a, b, diameter, name) {
+    let command = "draw " + name + " line {" + String(a.x) + " " + String(a.y) + " " + String(a.z) + "} {" + String(b.x) + " " + String(b.y) + " " + String(b.z) + "} diameter " + diameter + "; ";
+    return command;
+}
+
+function addSymmetricPoint(a, text, name) {
+    return "set echo " + name + " {" + String(a.x) + " " + String(a.y) + " " + String(a.z) + "}; echo \"" + text + "\"; ";
+}
+
+function addLatticePoint(a, diameter, name) {
+    // I do not know how to provide the atom positions on runtime, without loading from a file, so I just draw circles
+    return "draw " + name + " diameter " + diameter + " CIRCLE { " + String(a.x) + " " + String(a.y) + " " + String(a.z) + " }; ";
+}
+
+function bzone_edges( atilde ){ 
+    let ATilde = new calc.Vektor(0.0 * atilde, 0.5 * atilde, 0.5 * atilde);
+    let BTilde = new calc.Vektor(0.5 * atilde, 0.0 * atilde, 0.5 * atilde);
+    let CTilde = new calc.Vektor(0.5 * atilde, 0.5 * atilde, 0.0 * atilde);
+    let c = calc.MoreVektorOps.reziprokVektorA(ATilde, BTilde, CTilde);
+    let a = calc.MoreVektorOps.reziprokVektorB(ATilde, BTilde, CTilde);
+    let b = calc.MoreVektorOps.reziprokVektorC(ATilde, BTilde, CTilde);
+    let W1 = calc.MoreVektorOps.triVektor(a, b, c, 0.25, 0.75, 0.5);
+    let rU = calc.MoreVektorOps.triVektor(a, b, c, 0.0, -0.25, 0.25);
+    let rS = calc.MoreVektorOps.triVektor(a, b, c, -0.5, -0.25, -0.25);
+    let W2o = calc.VektorOps.addition$calc_Vektor$calc_Vektor(W1, rU);
+    let W2u = calc.VektorOps.addition$calc_Vektor$calc_Vektor(W1, rS);
+    let W3 = calc.VektorOps.addition$calc_Vektor$calc_Vektor(W2o, rS);
+    let WK = calc.MoreVektorOps.triVektor(a, b, c, 0.25, 0.0, -0.25);
+    let W12 = calc.VektorOps.addition$calc_Vektor$calc_Vektor(W1, WK);
+    let W11o = calc.VektorOps.addition$calc_Vektor$calc_Vektor$calc_Vektor(W12, WK, rU);
+    let W11u = calc.VektorOps.addition$calc_Vektor$calc_Vektor$calc_Vektor(W12, WK, rS);
+    let W10 = calc.VektorOps.addition$calc_Vektor$calc_Vektor$calc_Vektor(W11o, WK, rS);
+    let X = calc.MoreVektorOps.triVektor(a, b, c, 0.0, 0.5, 0.5);
+    let zX = calc.VektorOps.addition$calc_Vektor$calc_Vektor(X, X);
+    let W7 = calc.VektorOps.subtraktion(W3, zX);
+    let W8o = calc.VektorOps.subtraktion(W2o, zX);
+    let W8u = calc.VektorOps.subtraktion(W2u, zX);
+    let W9 = calc.VektorOps.subtraktion(W1, zX);
+    let nX = calc.VektorOps.addition$calc_Vektor$calc_Vektor$calc_Vektor(X, WK, WK);
+    let znX = calc.VektorOps.addition$calc_Vektor$calc_Vektor(nX, nX);
+    let W4 = calc.VektorOps.subtraktion(W12, znX);
+    let W5o = calc.VektorOps.subtraktion(W11o, znX);
+    let W5u = calc.VektorOps.subtraktion(W11u, znX);
+    let W6 = calc.VektorOps.subtraktion(W10, znX);
+    let WW = calc.VektorOps.subtraktion(W4, W3);
+    let O1 = calc.VektorOps.addition$calc_Vektor$calc_Vektor$calc_Vektor$calc_Vektor(W1, rU, WK, rU);
+    let O2 = calc.VektorOps.addition$calc_Vektor$calc_Vektor(O1, WW);
+    let O3 = calc.VektorOps.addition$calc_Vektor$calc_Vektor(O2, WK);
+    let O4 = calc.VektorOps.addition$calc_Vektor$calc_Vektor(W11o, rU);
+    let U1 = calc.VektorOps.addition$calc_Vektor$calc_Vektor$calc_Vektor$calc_Vektor(W1, rS, rS, WK);
+    let U2 = calc.VektorOps.addition$calc_Vektor$calc_Vektor(U1, WW);
+    let U3 = calc.VektorOps.addition$calc_Vektor$calc_Vektor(U2, WK);
+    let U4 = calc.VektorOps.addition$calc_Vektor$calc_Vektor(U1, WK);
+    let Gamma = new calc.Vektor(0.0, 0.0, 0.0);
+    let L = calc.MoreVektorOps.triVektor(a, b, c, 0.5, 0.5, 0.5);
+    let U = calc.MoreVektorOps.triVektor(a, b, c, 0.25, 0.625, 0.625);
+    let K = calc.MoreVektorOps.triVektor(a, b, c, 0.375, 0.75, 0.375);
+    
+    let output = "delete $line*; ";
+    output = output + "delete $lattpnt*; ";
+    output = output + "delete $symedge*; delete $sympt*; ";
+    output = output + "delete $recvec*; ";
+    output = output + "delete $vec*; ";
+    let zoom = 700.0/Math.max(Math.sqrt(calc.VektorOps.scalarproduct(c,c)),Math.max(Math.sqrt(calc.VektorOps.scalarproduct(a,a)),Math.sqrt(calc.VektorOps.scalarproduct(b,b))));
+    let symm_diameter = String(10.0/zoom);
+    let rec_arrow_diameter = String(15.0/zoom);
+    let arrow_diameter = String(15.0/zoom);
+    let diameter = "0.005";
+    output = output + "zoom " + zoom + "; moveto 0.5 {1,1,1} 33; ";
+    /*
+        * The output of the original Java Applet
+        addSymmetricPoint(Gamma, "\u0393");
+        addSymmetricPoint(X, "X");
+        addSymmetricPoint(L, "L");
+        addSymmetricPoint(W1, "W");
+        addSymmetricPoint(U, "U");
+        addSymmetricPoint(K, "K");
+        addEdge(W1, W2o);
+        addEdge(W1, W2u);
+        addEdge(W2o, W3);
+        addEdge(W2u, W3);
+        addEdge(W3, W4);
+        addEdge(W4, W5o);
+        addEdge(W4, W5u);
+        addEdge(W5o, W6);
+        addEdge(W5u, W6);
+        addEdge(W6, W7);
+        addEdge(W7, W8o);
+        addEdge(W7, W8u);
+        addEdge(W8o, W9);
+        addEdge(W8u, W9);
+        addEdge(W9, W10);
+        addEdge(W10, W11o);
+        addEdge(W10, W11u);
+        addEdge(W11o, W12);
+        addEdge(W11u, W12);
+        addEdge(W12, W1);
+        addEdge(W2o, O1);
+        addEdge(W5o, O2);
+        addEdge(W8o, O3);
+        addEdge(W11o, O4);
+        addEdge(O1, O2);
+        addEdge(O2, O3);
+        addEdge(O3, O4);
+        addEdge(O4, O1);
+        addEdge(W2u, U1);
+        addEdge(W5u, U2);
+        addEdge(W8u, U3);
+        addEdge(W11u, U4);
+        addEdge(U1, U2);
+        addEdge(U2, U3);
+        addEdge(U3, U4);
+        addEdge(U4, U1);
+        addSymmetricEdge(Gamma, X, "\u0394");
+        addSymmetricEdge(Gamma, K, "\u03A3");
+        addSymmetricEdge(Gamma, L, "\u039B");
+        addSymmetricEdge(W1, X, "Z");
+        addSymmetricEdge(U, X, "S");
+        addSymmetricEdge(L, W1, "Q");
+        addSymmetricEdge(L, K);
+        addSymmetricEdge(L, U);
+        addBase(a, "b_1");
+        addBase(b, "b_2");
+        addBase(c, "b_3");
+        addBasis(VektorOps.cmulti(ATilde, 0.31830988618379069D), "t_1");
+        addBasis(VektorOps.cmulti(BTilde, 0.31830988618379069D), "t_2");
+        addBasis(VektorOps.cmulti(CTilde, 0.31830988618379069D), "t_3");
+        */
+    output = output + addEdge(W1,W2o,diameter,"line1");
+    output = output + addEdge(W1,W2u,diameter,"line2");
+    output = output + addEdge(W2o,W3,diameter,"line3");
+    output = output + addEdge(W2u,W3,diameter,"line4");
+    output = output + addEdge(W3, W4,diameter,"line5");
+    output = output + addEdge(W4, W5o,diameter,"line6");
+    output = output + addEdge(W4, W5u,diameter,"line7");
+    output = output + addEdge(W5o, W6,diameter,"line8");
+    output = output + addEdge(W5u, W6,diameter,"line9");
+    output = output + addEdge(W6, W7,diameter,"line10");
+    output = output + addEdge(W7, W8o,diameter,"line11");
+    output = output + addEdge(W7, W8u,diameter,"line12");
+    output = output + addEdge(W8o, W9,diameter,"line13");
+    output = output + addEdge(W8u, W9,diameter,"line14");
+    output = output + addEdge(W9, W10,diameter,"line15");
+    output = output + addEdge(W10, W11o,diameter,"line16");
+    output = output + addEdge(W10, W11u,diameter,"line17");
+    output = output + addEdge(W11o, W12,diameter,"line18");
+    output = output + addEdge(W11u, W12,diameter,"line19");
+    output = output + addEdge(W12, W1,diameter,"line20");
+    output = output + addEdge(W2o, O1,diameter,"line21");
+    output = output + addEdge(W5o, O2,diameter,"line22");
+    output = output + addEdge(W8o, O3,diameter,"line23");
+    output = output + addEdge(W11o, O4,diameter,"line24");
+    output = output + addEdge(O1, O2,diameter,"line25");
+    output = output + addEdge(O2, O3,diameter,"line26");
+    output = output + addEdge(O3, O4,diameter,"line27");
+    output = output + addEdge(O4, O1,diameter,"line28");
+    output = output + addEdge(W2u, U1,diameter,"line29");
+    output = output + addEdge(W5u, U2,diameter,"line30");
+    output = output + addEdge(W8u, U3,diameter,"line31");
+    output = output + addEdge(W11u, U4,diameter,"line32");
+    output = output + addEdge(U1, U2,diameter,"line33");
+    output = output + addEdge(U2, U3,diameter,"line34");
+    output = output + addEdge(U3, U4,diameter,"line35");
+    output = output + addEdge(U4, U1,diameter,"line36");
+    output = output + "color $line* [0,0,1]; ";
+    
+    if (document.getElementById("showsymmetry").checked) {
+        output = output + addSymmetricPoint(Gamma,"\u0393","sympt1");
+        output = output + addSymmetricPoint(X,"X","sympt2");
+        output = output + addSymmetricPoint(L,"L","sympt3");
+        output = output + addSymmetricPoint(W1,"W","sympt4");
+        output = output + addSymmetricPoint(U,"U","sympt5");
+        output = output + addSymmetricPoint(K,"K","sympt6");
+        output = output + addSymmetricEdge(Gamma,X,"\u0394",symm_diameter,"symedge1","symedgename1");
+        output = output + addSymmetricEdge(Gamma,K,"\u03A3",symm_diameter,"symedge2","symedgename2");
+        output = output + addSymmetricEdge(Gamma,L,"\u039B",symm_diameter,"symedge3","symedgename3");
+        output = output + addSymmetricEdge(W1,X,"Z",symm_diameter,"symedge4","symedgename4");
+        output = output + addSymmetricEdge(U,X,"S",symm_diameter,"symedge5","symedgename5");
+        output = output + addSymmetricEdge(L,W1,"Q",symm_diameter,"symedge6","symedgename6");
+        output = output + addSymmetricEdge(L,K,"",symm_diameter,"symedge7","symedgename7");
+        output = output + addSymmetricEdge(L,U,"",symm_diameter,"symedge8","symedgename8");
+        output = output + "color $symedge* [0,0.5,0]; ";
+        output = output + "color $sympt* [0.1,0.2,0.1]; ";
+        output = output + "color $symedgename* [0,0.5,0]; ";
+    }
+ 
+    if (document.getElementById("showgrid").checked) {
+        let latticepointsize = String(40.0/zoom);
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,-1,-1,-1),latticepointsize,"lattpnt1");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,-1,-1,0),latticepointsize,"lattpnt2");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,-1,-1,1),latticepointsize,"lattpnt3");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,-1,0,-1),latticepointsize,"lattpnt4");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,-1,0,0),latticepointsize,"lattpnt5");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,-1,0,1),latticepointsize,"lattpnt6");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,-1,1,-1),latticepointsize,"lattpnt7");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,-1,1,0),latticepointsize,"lattpnt8");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,-1,1,1),latticepointsize,"lattpnt9");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,0,-1,-1),latticepointsize,"lattpnt10");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,0,-1,0),latticepointsize,"lattpnt11");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,0,-1,1),latticepointsize,"lattpnt12");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,0,0,-1),latticepointsize,"lattpnt13");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,0,0,0),latticepointsize,"lattpnt14");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,0,0,1),latticepointsize,"lattpnt15");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,0,1,-1),latticepointsize,"lattpnt16");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,0,1,0),latticepointsize,"lattpnt17");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,0,1,1),latticepointsize,"lattpnt18");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,1,-1,-1),latticepointsize,"lattpnt19");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,1,-1,0),latticepointsize,"lattpnt20");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,1,-1,1),latticepointsize,"lattpnt21");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,1,0,-1),latticepointsize,"lattpnt22");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,1,0,0),latticepointsize,"lattpnt23");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,1,0,1),latticepointsize,"lattpnt24");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,1,1,-1),latticepointsize,"lattpnt25");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,1,1,0),latticepointsize,"lattpnt26");
+        output = output + addLatticePoint(calc.MoreVektorOps.triVektor(a,b,c,1,1,1),latticepointsize,"lattpnt27");
+        output = output + "color $lattpnt* [1,0,0]; ";
+    }
+    
+    if (document.getElementById("showrecvec").checked) {
+        output = output + "draw recvec1 arrow {0 0 0} {" + String(a.x) + " " + String(a.y) + " " + String(a.z) + "} diameter " + rec_arrow_diameter + "; ";
+        output = output + "draw recvec2 arrow {0 0 0} {" + String(b.x) + " " + String(b.y) + " " + String(b.z) + "} diameter " + rec_arrow_diameter + "; ";
+        output = output + "draw recvec3 arrow {0 0 0} {" + String(c.x) + " " + String(c.y) + " " + String(c.z) + "} diameter " + rec_arrow_diameter + "; ";
+        output = output + "color $recvec* [0,0,0]; ";
+    }
+    
+    if (document.getElementById("showvec").checked) {
+        output = output + "draw vec1 arrow {0 0 0} {" + String(ATilde.x) + " " + String(ATilde.y) + " " + String(ATilde.z) + "} diameter " + arrow_diameter + "; ";
+        output = output + "draw vec2 arrow {0 0 0} {" + String(BTilde.x) + " " + String(BTilde.y) + " " + String(BTilde.z) + "} diameter " + arrow_diameter + "; ";
+        output = output + "draw vec3 arrow {0 0 0} {" + String(CTilde.x) + " " + String(CTilde.y) + " " + String(CTilde.z) + "} diameter " + arrow_diameter + "; ";
+        output = output + "color $vec* [0.2,1,0]; ";
+    }
+    //alert(output);
+    return output;
+}
+        
+//Cfcc["__class"] = "Cfcc";
+(function (calc) {
+    class VektorOps {
+        constructor() {
+        }
+        static addition$calc_Vektor$calc_Vektor(a, b) {
+            let cx = a.x + b.x;
+            let cy = a.y + b.y;
+            let cz = a.z + b.z;
+            return new calc.Vektor(cx, cy, cz);
+        }
+        static scalarproduct(a, b) {
+            let n = a.x * b.x + a.y * b.y + a.z * b.z;
+            return n;
+        }
+        static crossproduct(a, b) {
+            let cx = a.y * b.z - b.y * a.z;
+            let cy = -a.x * b.z + a.z * b.x;
+            let cz = a.x * b.y - a.y * b.x;
+            return new calc.Vektor(cx, cy, cz);
+        }
+        static spatproduct(a, b, c) {
+            let n = VektorOps.scalarproduct(a, VektorOps.crossproduct(b, c));
+            return n;
+        }
+        static cmulti(a, c) {
+            let cx = a.x * c;
+            let cy = a.y * c;
+            let cz = a.z * c;
+            return new calc.Vektor(cx, cy, cz);
+        }
+        static negative(a) {
+            let cx = -a.x;
+            let cy = -a.y;
+            let cz = -a.z;
+            return new calc.Vektor(cx, cy, cz);
+        }
+        static addition$calc_Vektor$calc_Vektor$calc_Vektor(a, b, d) {
+            let cx = a.x + b.x + d.x;
+            let cy = a.y + b.y + d.y;
+            let cz = a.z + b.z + d.z;
+            return new calc.Vektor(cx, cy, cz);
+        }
+        static subtraktion(a, b) {
+            let cx = a.x - b.x;
+            let cy = a.y - b.y;
+            let cz = a.z - b.z;
+            return new calc.Vektor(cx, cy, cz);
+        }
+        static addition$calc_Vektor$calc_Vektor$calc_Vektor$calc_Vektor(a, b, d, f) {
+            let cx = a.x + b.x + d.x + f.x;
+            let cy = a.y + b.y + d.y + f.y;
+            let cz = a.z + b.z + d.z + f.z;
+            return new calc.Vektor(cx, cy, cz);
+        }
+        static addition$calc_Vektor$calc_Vektor$calc_Vektor$calc_Vektor$calc_Vektor(a, b, d, f, g) {
+            let cx = a.x + b.x + d.x + f.x + g.x;
+            let cy = a.y + b.y + d.y + f.y + g.y;
+            let cz = a.z + b.z + d.z + f.z + g.z;
+            return new calc.Vektor(cx, cy, cz);
+        }
+        static addition$calc_Vektor$calc_Vektor$calc_Vektor$calc_Vektor$calc_Vektor$calc_Vektor(a, b, d, f, g, h) {
+            let cx = a.x + b.x + d.x + f.x + g.x + h.x;
+            let cy = a.y + b.y + d.y + f.y + g.y + h.y;
+            let cz = a.z + b.z + d.z + f.z + g.z + h.z;
+            return new calc.Vektor(cx, cy, cz);
+        }
+        static addition(a, b, d, f, g, h) {
+            if (((a != null && a instanceof calc.Vektor) || a === null) && ((b != null && b instanceof calc.Vektor) || b === null) && ((d != null && d instanceof calc.Vektor) || d === null) && ((f != null && f instanceof calc.Vektor) || f === null) && ((g != null && g instanceof calc.Vektor) || g === null) && ((h != null && h instanceof calc.Vektor) || h === null)) {
+                return calc.VektorOps.addition$calc_Vektor$calc_Vektor$calc_Vektor$calc_Vektor$calc_Vektor$calc_Vektor(a, b, d, f, g, h);
+            }
+            else if (((a != null && a instanceof calc.Vektor) || a === null) && ((b != null && b instanceof calc.Vektor) || b === null) && ((d != null && d instanceof calc.Vektor) || d === null) && ((f != null && f instanceof calc.Vektor) || f === null) && ((g != null && g instanceof calc.Vektor) || g === null) && h === undefined) {
+                return calc.VektorOps.addition$calc_Vektor$calc_Vektor$calc_Vektor$calc_Vektor$calc_Vektor(a, b, d, f, g);
+            }
+            else if (((a != null && a instanceof calc.Vektor) || a === null) && ((b != null && b instanceof calc.Vektor) || b === null) && ((d != null && d instanceof calc.Vektor) || d === null) && ((f != null && f instanceof calc.Vektor) || f === null) && g === undefined && h === undefined) {
+                return calc.VektorOps.addition$calc_Vektor$calc_Vektor$calc_Vektor$calc_Vektor(a, b, d, f);
+            }
+            else if (((a != null && a instanceof calc.Vektor) || a === null) && ((b != null && b instanceof calc.Vektor) || b === null) && ((d != null && d instanceof calc.Vektor) || d === null) && f === undefined && g === undefined && h === undefined) {
+                return calc.VektorOps.addition$calc_Vektor$calc_Vektor$calc_Vektor(a, b, d);
+            }
+            else if (((a != null && a instanceof calc.Vektor) || a === null) && ((b != null && b instanceof calc.Vektor) || b === null) && d === undefined && f === undefined && g === undefined && h === undefined) {
+                return calc.VektorOps.addition$calc_Vektor$calc_Vektor(a, b);
+            }
+            else
+                throw new Error('invalid overload');
+        }
+        static solvelinearCramer(A1, A2, A3, b) {
+            let a = A1.x;
+            let bb = A2.x;
+            let c = A3.x;
+            let d = A1.y;
+            let e = A2.y;
+            let f = A3.y;
+            let g = A1.z;
+            let h = A2.z;
+            let i = A3.z;
+            let j = b.x;
+            let k = b.y;
+            let l = b.z;
+            let eihf = e * i - h * f;
+            let bich = bb * i - c * h;
+            let bfce = bb * f - c * e;
+            let det_1 = 1.0 / ((a * eihf - d * bich) + g * bfce);
+            let x = det_1 * ((j * eihf - k * bich) + l * bfce);
+            let y = det_1 * ((a * (k * i - l * f) - d * (j * i - c * l)) + g * (j * f - c * k));
+            let z = det_1 * ((a * (e * l - h * k) - d * (bb * l - h * j)) + g * (k * bb - j * e));
+            return new calc.Vektor(x, y, z);
+        }
+    }
+    calc.VektorOps = VektorOps;
+    VektorOps["__class"] = "calc.VektorOps";
+})(calc || (calc = {}));
+(function (calc) {
+    class MoreVektorOps {
+        constructor() {
+        }
+        static reziprokVektorA(ATilde, BTilde, CTilde) {
+            let A = calc.VektorOps.cmulti(calc.VektorOps.crossproduct(BTilde, CTilde), 1.0 / calc.VektorOps.spatproduct(ATilde, BTilde, CTilde));
+            return A;
+        }
+        static reziprokVektorB(ATilde, BTilde, CTilde) {
+            let B = calc.VektorOps.cmulti(calc.VektorOps.crossproduct(CTilde, ATilde), 1.0 / calc.VektorOps.spatproduct(ATilde, BTilde, CTilde));
+            return B;
+        }
+        static reziprokVektorC(ATilde, BTilde, CTilde) {
+            let C = calc.VektorOps.cmulti(calc.VektorOps.crossproduct(ATilde, BTilde), 1.0 / calc.VektorOps.spatproduct(ATilde, BTilde, CTilde));
+            return C;
+        }
+        static triVektor(A, B, C, u, v, w) {
+            let dx = u * A.x + v * B.x + w * C.x;
+            let dy = u * A.y + v * B.y + w * C.y;
+            let dz = u * A.z + v * B.z + w * C.z;
+            return new calc.Vektor(dx, dy, dz);
+        }
+        static orthoVektor(A, B, C, u, v, w) {
+            let dx = u * -B.y + v * -A.y + w * -C.y;
+            let dy = u * -B.x + v * -A.x + w * -C.x;
+            let dz = u * B.z + v * A.z + w * C.z;
+            return new calc.Vektor(dx, dy, dz);
+        }
+        static identicalVektor(A) {
+            let bx = A.x;
+            let by = A.y;
+            let bz = A.z;
+            return new calc.Vektor(bx, by, bz);
+        }
+        static halfway(a, b) {
+            let cx = (a.x + b.x) / 2.0;
+            let cy = (a.y + b.y) / 2.0;
+            let cz = (a.z + b.z) / 2.0;
+            return new calc.Vektor(cx, cy, cz);
+        }
+        static mirrorX(A) {
+            let bx = -A.x;
+            let by = A.y;
+            let bz = A.z;
+            return new calc.Vektor(bx, by, bz);
+        }
+        static mirrorY(A) {
+            let bx = A.x;
+            let by = -A.y;
+            let bz = A.z;
+            return new calc.Vektor(bx, by, bz);
+        }
+        static mirrorZ(A) {
+            let bx = A.x;
+            let by = A.y;
+            let bz = -A.z;
+            return new calc.Vektor(bx, by, bz);
+        }
+    }
+    calc.MoreVektorOps = MoreVektorOps;
+    MoreVektorOps["__class"] = "calc.MoreVektorOps";
+})(calc || (calc = {}));
+//Cfcc.main();
